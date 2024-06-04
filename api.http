@@ -1,0 +1,86 @@
+@client_a_id = {{createClientA.response.body.ID}}
+@account_a_id = {{createAccountA.response.body.ID}}
+@client_b_id = {{createClientB.response.body.ID}}
+@account_b_id = {{createAccountB.response.body.ID}}
+
+###
+
+# Create Client A
+# @name createClientA
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@j.com"
+}
+
+###
+
+# Create Account A
+# @name createAccountA
+POST http://localhost:8080/accounts HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "{{client_a_id}}",
+    "balance": 200
+}
+
+###
+
+# Create Client B
+# @name createClientB
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Mark Doe",
+    "email": "mark@j.com"
+}
+
+###
+
+# Create Account B
+# @name createAccountB
+POST http://localhost:8080/accounts HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "{{client_b_id}}",
+    "balance": 200
+}
+
+###
+
+# Transfer from A to B
+POST http://localhost:8080/transactions HTTP/1.1
+Content-Type: application/json
+
+{
+    "account_id_from": "{{account_a_id}}",
+    "account_id_to": "{{account_b_id}}",
+    "amount": 10
+}
+
+###
+
+# Transfer from B to A
+POST http://localhost:8080/transactions HTTP/1.1
+Content-Type: application/json
+
+{
+    "account_id_from": "{{account_b_id}}",
+    "account_id_to": "{{account_a_id}}",
+    "amount": 10
+}
+
+###
+
+# Account A Balance
+GET http://localhost:3003/balances/{{account_a_id}}
+
+###
+
+# Account B Balance
+GET http://localhost:3003/balances/{{account_b_id}}
